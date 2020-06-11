@@ -1,0 +1,6 @@
+bind_addr = ":50"
+log_level = "debug"
+socket_port = ":51"
+
+[store]
+database_url = "host=localhost dbname=mitso_chat sslmode=disable password=62egegos user=postgres"
