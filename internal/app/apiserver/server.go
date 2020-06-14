@@ -87,6 +87,7 @@ func (s *server) error(w http.ResponseWriter, r *http.Request, code int, err err
 func (s *server) respond(w http.ResponseWriter, r *http.Request, code int, data interface{}, json bool) {
 	w.WriteHeader(code)
 	if data != nil {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		if json {
 			_ = NewEncoder(w).Encode(data)
 		} else {
