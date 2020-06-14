@@ -2,6 +2,7 @@ package apiserver
 
 import (
 	. "encoding/json"
+	"encoding/xml"
 	"errors"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -35,7 +36,7 @@ func (s *server) handleAddUser() http.HandlerFunc {
 
 		s.logRequest(w,r)
 
-		uni := model.Uni{}
+		uni := model.Abiturient{}
 
 		if err := NewDecoder(r.Body).Decode(&uni); err != nil {
 			s.error(w, r, http.StatusBadRequest, err)
@@ -65,6 +66,7 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (s *server) configureRouter() {
 	s.router.HandleFunc("/api/upload_photo", s.handleUploadPhoto()).Methods("POST")
+	s.router.HandleFunc("/api/get_user", s.handleGetUser()).Methods("POST")
 	s.router.HandleFunc("/api/addUser", s.handleAddUser()).Methods("POST")
 	s.router.Handle("/files/photos/{rest}", http.StripPrefix("/files/photos/", http.FileServer(http.Dir("files/photos/"))))
 }
@@ -79,22 +81,51 @@ func (s *server) logRequest(w http.ResponseWriter, r *http.Request) {
 func (s *server) error(w http.ResponseWriter, r *http.Request, code int, err error) {
 	s.respond(w, r, code, map[string]string{
 		"error": err.Error(),
-	})
+	}, true)
 }
 
-func (s *server) respond(w http.ResponseWriter, r *http.Request, code int, data interface{}) {
+func (s *server) respond(w http.ResponseWriter, r *http.Request, code int, data interface{}, json bool) {
 	w.WriteHeader(code)
 	if data != nil {
-		_ = NewEncoder(w).Encode(data)
+		if json {
+			_ = NewEncoder(w).Encode(data)
+		} else {
+			_ = xml.NewEncoder(w).Encode(data)
+		}
+
 	}
 }
 
-func (s *server) fetchToken(w http.ResponseWriter, r *http.Request) (string, error) {
-	requestToken := r.Header.Get("Authorization")
-	if requestToken == "" {
-		return "", errorNotAuthorize
+
+
+func (s *server) handleGetUser() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		type reqest struct {
+			PasportID string `json:"pasport_id"`
+			IsJson bool `json:"is_json"`
+		}
+
+		req := reqest{}
+
+		if err := NewDecoder(r.Body).Decode(&req); err != nil {
+
+		}
+
+		if req.PasportID  == "" {
+			//s.error(w, r, http.StatusBadRequest, Error)
+			return
+		}
+
+		err, person := s.store.GetPerson(req.PasportID)
+
+		if err != nil {
+			s.error(w,r,500,err)
+			return
+		}
+
+		s.respond(w,r,200, person, req.IsJson)
+
 	}
-	return requestToken, nil
 }
 
 func (s *server) handleUploadPhoto() http.HandlerFunc {
@@ -132,6 +163,6 @@ func (s *server) handleUploadPhoto() http.HandlerFunc {
 		_, _ = io.Copy(f, file)
 		s.respond(w, r, http.StatusOK, &response{
 			ImageKey: savedFilePath,
-		})
+		}, true)
 	}
 }
