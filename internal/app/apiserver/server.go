@@ -43,6 +43,7 @@ func (s *server) handleAddUser() http.HandlerFunc {
 			return
 		}
 
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		if err := s.store.AddPersson(&uni); err != nil {
 			s.error(w,r, 500, err)
 			return
@@ -87,7 +88,7 @@ func (s *server) error(w http.ResponseWriter, r *http.Request, code int, err err
 func (s *server) respond(w http.ResponseWriter, r *http.Request, code int, data interface{}, json bool) {
 	w.WriteHeader(code)
 	if data != nil {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
+
 		if json {
 			_ = NewEncoder(w).Encode(data)
 		} else {
@@ -105,11 +106,12 @@ func (s *server) handleGetUser() http.HandlerFunc {
 			PasportID string `json:"pasport_id"`
 			IsJson bool `json:"is_json"`
 		}
+		s.logRequest(w,r)
 
 		req := reqest{}
 
 		if err := NewDecoder(r.Body).Decode(&req); err != nil {
-
+			return
 		}
 
 		if req.PasportID  == "" {
@@ -124,6 +126,7 @@ func (s *server) handleGetUser() http.HandlerFunc {
 			return
 		}
 
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		s.respond(w,r,200, person, req.IsJson)
 
 	}
@@ -162,6 +165,7 @@ func (s *server) handleUploadPhoto() http.HandlerFunc {
 		}
 		defer f.Close()
 		_, _ = io.Copy(f, file)
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		s.respond(w, r, http.StatusOK, &response{
 			ImageKey: savedFilePath,
 		}, true)
