@@ -69,7 +69,9 @@ func (s *server) configureRouter() {
 	s.router.HandleFunc("/api/upload_photo", s.handleUploadPhoto()).Methods("POST")
 	s.router.HandleFunc("/api/get_user", s.handleGetUser()).Methods("POST")
 	s.router.HandleFunc("/api/addUser", s.handleAddUser()).Methods("POST")
-	s.router.Handle("/files/photos/{rest}", http.StripPrefix("/files/photos/", http.FileServer(http.Dir("files/photos/"))))
+	s.router.Handle("/files/photos/{rest}", http.StripPrefix("/files/photos/", http.FileServer(http.Dir("./files/photos/"))))
+	s.router.PathPrefix("/abiturient/").Handler(http.StripPrefix("/abiturient/", 
+     http.FileServer(http.Dir("./abiturient/"))))
 }
 
 func (s *server) logRequest(w http.ResponseWriter, r *http.Request) {

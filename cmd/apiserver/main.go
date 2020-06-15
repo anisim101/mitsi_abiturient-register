@@ -6,6 +6,7 @@ import (
 	"log"
 	. "mitsoСhat/internal/app/apiserver"
 	"mitsoСhat/internal/app/store/sqlstore"
+
 )
 
 
@@ -27,6 +28,10 @@ func main() {
 	// 	log.Fatal(err)
 	// }
 
+	// http.Handle("/abiturient/", http.StripPrefix("/abiturient/", http.FileServer(http.Dir("abiturient"))))
+	// http.ListenAndServe(":50", nil)
+	
+
 	db,err := newDB(config.DatabaseURL)
 	if err != nil {
 		log.Fatal(err)
@@ -35,7 +40,6 @@ func main() {
 	defer db.Close()
 
 	store := sqlstore.New(db)
-
 
 	if err := Start(config, *store); err != nil {
 		log.Fatal(err)

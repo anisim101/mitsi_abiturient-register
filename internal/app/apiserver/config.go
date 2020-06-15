@@ -10,7 +10,7 @@ type Config struct {
 
 func NewConfig() *Config {
 	return &Config{
-		BindAddr:    ":3050",
+		BindAddr:    ":3052",
 		LogLevel:    "debug",
 		DatabaseURL: "host=localhost dbname=mitso_chat sslmode=disable password=62egegos user=postgres",
 		//DatabaseURL: "host=localhost port=3053 dbname=mitsodb sslmode=require password=mitsodbpass user=dbuser",
