@@ -84,7 +84,7 @@ func (s *server) configureRouter() {
 	s.router.HandleFunc("/api/get_user", s.handleGetUser()).Methods("POST")
 	s.router.HandleFunc("/api/addUser", s.handleAddUser()).Methods("POST")
 	s.router.Handle("/files/photos/{rest}", http.StripPrefix("/files/photos/", http.FileServer(http.Dir("./files/photos/"))))
-	s.router.PathPrefix("/abiturient/").Handler(http.StripPrefix("/abiturient/",
+	s.router.PathPrefix("/").Handler(http.StripPrefix("/",
 		http.FileServer(http.Dir("./abiturient/"))))
 		s.router.PathPrefix("/abiturient_files/").Handler(http.StripPrefix("/abiturient_files/",
 		http.FileServer(http.Dir("/home/uroot/abit_files/"))))
