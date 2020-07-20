@@ -42,7 +42,7 @@ func (s *server) handleAddUser() http.HandlerFunc {
 			return
 		}
 
-		writer, er := os.Create("/home/uroot/abit_files/" + uni.SerialAndPassportNumber + ".xml")
+		writer, er := os.Create("/home/uroot/abit_files/minsk/" + uni.SerialAndPassportNumber + ".xml")
 		if er != nil {
 			s.error(w, r, 500, er)
 			return
