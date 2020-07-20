@@ -42,7 +42,7 @@ func (s *server) handleAddUser() http.HandlerFunc {
 			return
 		}
 
-		writer, er := os.Create("/home/uroot/mitsoserver/mitsi_abiturient-register/" + uni.SerialAndPassportNumber + ".xml")
+		writer, er := os.Create("/home/uroot/abit_files/" + uni.SerialAndPassportNumber + ".xml")
 		if er != nil {
 			s.error(w, r, 500, er)
 			return
@@ -55,6 +55,8 @@ func (s *server) handleAddUser() http.HandlerFunc {
 			s.error(w, r, 500, err)
 			return
 		}
+
+		writer.Close();
 
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		// if err := s.store.AddPersson(&uni); err != nil {
@@ -84,6 +86,8 @@ func (s *server) configureRouter() {
 	s.router.Handle("/files/photos/{rest}", http.StripPrefix("/files/photos/", http.FileServer(http.Dir("./files/photos/"))))
 	s.router.PathPrefix("/abiturient/").Handler(http.StripPrefix("/abiturient/",
 		http.FileServer(http.Dir("./abiturient/"))))
+		s.router.PathPrefix("/abiturient_files/").Handler(http.StripPrefix("/abiturient_files/",
+		http.FileServer(http.Dir("/home/uroot/abit_files/"))))
 }
 
 func (s *server) logRequest(w http.ResponseWriter, r *http.Request) {
