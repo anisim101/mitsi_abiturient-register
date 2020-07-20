@@ -2,10 +2,8 @@ package main
 
 import (
 	"database/sql"
-	"flag"
 	"log"
 	. "mitsoСhat/internal/app/apiserver"
-	"mitsoСhat/internal/app/store/sqlstore"
 
 )
 
@@ -20,7 +18,7 @@ import (
 //}
 
 func main() {
-	flag.Parse()
+	// flag.Parse()
 	config := NewConfig()
 	// _, err := toml.DecodeFile(configPath, config)
 
@@ -32,16 +30,16 @@ func main() {
 	// http.ListenAndServe(":50", nil)
 	
 
-	db,err := newDB(config.DatabaseURL)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// db,err := newDB(config.DatabaseURL)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	defer db.Close()
+	//defer db.Close()
 
-	store := sqlstore.New(db)
+	//store := sqlstore.New(db)
 
-	if err := Start(config, *store); err != nil {
+	if err := Start(config/*, *store*/); err != nil {
 		log.Fatal(err)
 	}
 

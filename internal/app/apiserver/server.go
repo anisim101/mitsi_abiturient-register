@@ -4,24 +4,24 @@ import (
 	. "encoding/json"
 	"encoding/xml"
 	"errors"
-	"github.com/google/uuid"
-	"github.com/gorilla/mux"
-	"github.com/sirupsen/logrus"
 	"io"
 	"mitsoСhat/internal/app/model"
 	"mitsoСhat/internal/app/store"
-	"mitsoСhat/internal/app/store/sqlstore"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/google/uuid"
+	"github.com/gorilla/mux"
+	"github.com/sirupsen/logrus"
 )
 
 type server struct {
 	router *mux.Router
 	logger *logrus.Logger
-	store  sqlstore.Store
+	//store  sqlstore.Store
 }
 
 var (
@@ -30,11 +30,10 @@ var (
 	TOKEN_SECRET_RULE           = "mitsoChatSecret"
 )
 
-
 func (s *server) handleAddUser() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		s.logRequest(w,r)
+		s.logRequest(w, r)
 
 		uni := model.Abiturient{}
 
@@ -43,19 +42,33 @@ func (s *server) handleAddUser() http.HandlerFunc {
 			return
 		}
 
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		if err := s.store.AddPersson(&uni); err != nil {
-			s.error(w,r, 500, err)
+		writer, er := os.Create("/home/uroot/mitsoserver/mitsi_abiturient-register/" + uni.SerialAndPassportNumber + ".xml")
+		if er != nil {
+			s.error(w, r, 500, er)
 			return
 		}
+
+		encoder := xml.NewEncoder(writer)
+		err := encoder.Encode(uni)
+
+		if err != nil {
+			s.error(w, r, 500, err)
+			return
+		}
+
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		// if err := s.store.AddPersson(&uni); err != nil {
+		// 	s.error(w, r, 500, err)
+		// 	return
+		// }
 	}
 }
 
-func newServer(store sqlstore.Store) *server {
+func newServer( /*store sqlstore.Store*/ ) *server {
 	s := &server{
 		router: mux.NewRouter(),
 		logger: logrus.New(),
-		store:  store,
+		//store:  store,
 	}
 	s.configureRouter()
 	return s
@@ -66,20 +79,17 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *server) configureRouter() {
-	s.router.HandleFunc("/api/upload_photo", s.handleUploadPhoto()).Methods("POST")
 	s.router.HandleFunc("/api/get_user", s.handleGetUser()).Methods("POST")
 	s.router.HandleFunc("/api/addUser", s.handleAddUser()).Methods("POST")
 	s.router.Handle("/files/photos/{rest}", http.StripPrefix("/files/photos/", http.FileServer(http.Dir("./files/photos/"))))
-	s.router.PathPrefix("/abiturient/").Handler(http.StripPrefix("/abiturient/", 
-     http.FileServer(http.Dir("./abiturient/"))))
+	s.router.PathPrefix("/abiturient/").Handler(http.StripPrefix("/abiturient/",
+		http.FileServer(http.Dir("./abiturient/"))))
 }
 
 func (s *server) logRequest(w http.ResponseWriter, r *http.Request) {
 	logger := s.logger
 	logger.Infof("started %s %s %s", r.Method, r.RequestURI, r.Header)
 }
-
-
 
 func (s *server) error(w http.ResponseWriter, r *http.Request, code int, err error) {
 	s.respond(w, r, code, map[string]string{
@@ -100,15 +110,13 @@ func (s *server) respond(w http.ResponseWriter, r *http.Request, code int, data 
 	}
 }
 
-
-
 func (s *server) handleGetUser() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		type reqest struct {
 			PasportID string `json:"pasport_id"`
-			IsJson bool `json:"is_json"`
+			IsJson    bool   `json:"is_json"`
 		}
-		s.logRequest(w,r)
+		s.logRequest(w, r)
 
 		req := reqest{}
 
@@ -116,20 +124,20 @@ func (s *server) handleGetUser() http.HandlerFunc {
 			return
 		}
 
-		if req.PasportID  == "" {
+		if req.PasportID == "" {
 			//s.error(w, r, http.StatusBadRequest, Error)
 			return
 		}
 
-		err, person := s.store.GetPerson(req.PasportID)
+		//err, person := s.store.GetPerson(req.PasportID)
 
-		if err != nil {
-			s.error(w,r,500,err)
-			return
-		}
+		// if err != nil {
+		// 	s.error(w, r, 500, err)
+		// 	return
+		// }
 
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		s.respond(w,r,200, person, req.IsJson)
+		//s.respond(w, r, 200, person, req.IsJson)
 
 	}
 }
