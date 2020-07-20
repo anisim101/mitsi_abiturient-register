@@ -7,7 +7,7 @@ type Abiturient struct {
 	LatinFirstName               string  `json:"latin_first_name",xml:"latin_first_name"`
 	LatinSecondName              string  `json:"latin_second_name",xml:"latin_second_name"`
 	Gender                       string  `json:"gender",xml:"gender",xml:"gender"`
-	DateOfBirth                  int   `json:"date_of_birth",xml:"date_of_birth",xml:"date_of_birth"`
+	DateOfBirth                  string   `json:"date_of_birth",xml:"date_of_birth",xml:"date_of_birth"`
 	IsForeigner                  bool    `json:"is_foreigner",xml:"is_foreigner",xml:"is_foreigner"`
 	Nationality                  string  `json:"nationality",xml:"nationality",xml:"nationality"`
 	FamilyStatus                 string  `json:"family_status",xml:"family_status",xml:"family_status"`
@@ -22,8 +22,8 @@ type Abiturient struct {
 	DocumentType                 string  `json:"document_type",xml:"document_type"`
 	SerialAndPassportNumber      string  `json:"serial_and_passport_number",xml:"serial_and_passport_number"`
 	IssuedBy                     string  `json:"issued_by",xml:"issued_by"`
-	WhenIssud                    int64   `json:"when_issud",xml:"when_issud"`
-	ValidUntil                   int64   `json:"valid_until",xml:"valid_until"`
+	WhenIssud                    string   `json:"when_issud",xml:"when_issud"`
+	ValidUntil                   string   `json:"valid_until",xml:"valid_until"`
 	PersonalNomer                string  `json:"personal_nomer",xml:"personal_nomer"`
 	FormStuding                  string  `json:"form_studing",xml:"form_studing"`
 	Faculty                      string  `json:"faculty",xml:"faculty"`
@@ -51,7 +51,7 @@ type Abiturient struct {
 	Ssuz                         bool    `json:"ssuz",xml:"ssuz"`
 	Ptu                          bool    `json:"ptu",xml:"ptu"`
 	DocumentEducationNumberNomer string  `json:"document_education_number_nomer",xml:"document_education_number_nomer"`
-	DocumentEducationAt          int64   `json:"document_education_at",xml:"document_education_at"`
+	DocumentEducationAt          string   `json:"document_education_at",xml:"document_education_at"`
 	AverageMark                  float64 `json:"average_mark",xml:"average_mark"`
 	SumMarks                     float64 `json:"sum_marks",xml:"sum_marks"`
 	Olimp                        bool    `json:"olimp",xml:"olimp"`
@@ -82,8 +82,8 @@ type Abiturient struct {
 	OwnerPassportNumber          string  `json:"owner_passport_number",xml:"owner_passport_number"`
 	OwnerPassportID              string  `json:"owner_passport_id",xml:"owner_passport_id"`
 	OwnerPassportKtoVidal        string  `json:"owner_passport_kto_vidal",xml:"owner_passport_kto_vidal"`
-	OwnerPassportKogdaVidal      int64   `json:"owner_passport_kogda_vidal",xml:"owner_passport_kogda_vidal"`
-	OwnerPassportSrok            int64   `json:"owner_passport_srok",xml:"owner_passport_srok"`
+	OwnerPassportKogdaVidal      string   `json:"owner_passport_kogda_vidal",xml:"owner_passport_kogda_vidal"`
+	OwnerPassportSrok            string   `json:"owner_passport_srok",xml:"owner_passport_srok"`
 	PasportPhoto                 string  `json:"pasport_photo",xml:"pasport_photo"`
 	CT1_Photo                    string  `json:"ct_1_photo",xml:"ct_1_photo"`
 	CT2_Photo                    string  `json:"ct_2_photo",xml:"ct_2_photo"`
