@@ -42,7 +42,7 @@ func (s *server) handleAddUser() http.HandlerFunc {
 			return
 		}
 
-		writer, er := os.Create("/home/uroot/abit_files/minsk/" + uni.SerialAndPassportNumber + ".xml")
+		writer, er := os.Create( /*"/home/uroot/abit_files/minsk/"*/ "abit_files/" + uni.SerialAndPassportNumber + ".xml")
 		if er != nil {
 			s.error(w, r, 500, er)
 			return
@@ -87,7 +87,7 @@ func (s *server) configureRouter() {
 	s.router.PathPrefix("/").Handler(http.StripPrefix("/",
 		http.FileServer(http.Dir("./abiturient/"))))
 	s.router.PathPrefix("/abit_files/").Handler(http.StripPrefix("/abit_files/",
-		http.FileServer(http.Dir("./home/uroot/abit_files/"))))
+		http.FileServer(http.Dir("./abit_files/"))))
 }
 
 func (s *server) logRequest(w http.ResponseWriter, r *http.Request) {
