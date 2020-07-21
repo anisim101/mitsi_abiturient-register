@@ -3,19 +3,16 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "assets/AssetManifest.json": "e7e2c116c99b9249f6388b9524f015b1",
-"assets/assets/cert.pem": "9f4e15454920d97e15b2af81d7bb0b51",
+  "assets/AssetManifest.json": "2efbb41d7877d10aac9d091f58ccd7b9",
 "assets/FontManifest.json": "01700ba55b08a6141f33e168c4a6c22f",
 "assets/fonts/MaterialIcons-Regular.ttf": "56d3ffdef7a25659eab6a68a3fbfaf16",
-"assets/NOTICES": "36cb3c6e420f73e57c6fa21b7005f712",
+"assets/NOTICES": "bb07740a685df37eb39d69fa306f1d14",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "115e937bb829a890521f72d2e664b632",
-"favicon.png": "5dcef449791fa27946b3d35ad8803796",
-"icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
-"icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
-"index.html": "aa3ce7c5eb4d087d188c1eb7b9a03422",
-"/": "aa3ce7c5eb4d087d188c1eb7b9a03422",
-"main.dart.js": "398d015dad6cd166df0595908780a976",
-"manifest.json": "4d331ba0e9dac94075a2c156c80fabfb"
+"favicon.png": "4c12892ea2ea4dc41fa3e2757c8ec923",
+"index.html": "26af59aeab6fd6468ad164d0ed323545",
+"/": "26af59aeab6fd6468ad164d0ed323545",
+"main.dart.js": "dbc5c19889c07ac4fc0fb79ae364665c",
+"manifest.json": "d9fb77e12844646940168f90b97ea687"
 };
 
 // The application shell files that are downloaded before a service worker can
@@ -106,7 +103,7 @@ self.addEventListener("fetch", (event) => {
   if (event.request.url == origin || event.request.url.startsWith(origin + '/#')) {
     key = '/';
   }
-  // If the URL is not the the RESOURCE list, skip the cache.
+  // If the URL is not the RESOURCE list, skip the cache.
   if (!RESOURCES[key]) {
     return event.respondWith(fetch(event.request));
   }
@@ -129,7 +126,7 @@ self.addEventListener("fetch", (event) => {
 self.addEventListener('message', (event) => {
   // SkipWaiting can be used to immediately activate a waiting service worker.
   // This will also require a page refresh triggered by the main worker.
-  if (event.message == 'skipWaiting') {
+  if (event.data == 'skipWaiting') {
     return self.skipWaiting();
   }
 
