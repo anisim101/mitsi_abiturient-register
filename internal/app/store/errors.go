@@ -12,4 +12,5 @@ var (
 	InternalError = errors.New("Internal error")
 	ErrBigFile = errors.New("Upload file limit")
 	ErrIvalidFieFile = errors.New("InvalidFile")
+	FileExist = errors.New("File already exist")
 )

@@ -42,7 +42,25 @@ func (s *server) handleAddUser() http.HandlerFunc {
 			return
 		}
 
-		writer, er := os.Create("/home/uroot/abit_files/minsk/" + uni.SerialAndPassportNumber + ".xml")
+		var baseUrl = "/home/uroot/abit_files/"
+
+		if uni.UniverLocation == "Минск" {
+			baseUrl = baseUrl + "minsk/"
+		} else if uni.UniverLocation == "Витебск"  {
+			baseUrl = baseUrl + "vitebsk/"
+		} else if uni.UniverLocation == "Гомель" {
+			baseUrl = baseUrl + "gomel/"
+		}
+
+	baseUrl = baseUrl + uni.SerialAndPassportNumber + ".xml"
+
+		if  Exists(baseUrl) {
+				s.error(w,r,http.StatusGone, store.FileExist)
+				return
+		}
+
+
+		writer, er := os.Create(baseUrl)
 		if er != nil {
 			s.error(w, r, 500, er)
 			return
@@ -66,6 +84,10 @@ func (s *server) handleAddUser() http.HandlerFunc {
 	}
 }
 
+func Exists(name string) bool {
+	_, err := os.Stat(name)
+	return !os.IsNotExist(err)
+}
 func newServer( /*store sqlstore.Store*/ ) *server {
 	s := &server{
 		router: mux.NewRouter(),
