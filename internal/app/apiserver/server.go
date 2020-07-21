@@ -1,14 +1,19 @@
 package apiserver
 
 import (
+	"archive/zip"
 	. "encoding/json"
 	"encoding/xml"
 	"errors"
+	"fmt"
+	"github.com/robfig/cron"
 	"io"
+	"io/ioutil"
 	"mitsoСhat/internal/app/model"
 	"mitsoСhat/internal/app/store"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -24,11 +29,107 @@ type server struct {
 	//store  sqlstore.Store
 }
 
+
+
 var (
 	errorNotAuthorize           = errors.New("no authorization token")
 	errIncorrectEmailOrPassword = errors.New("email or password not valid")
 	TOKEN_SECRET_RULE           = "mitsoChatSecret"
 )
+
+func addFiles(w *zip.Writer, basePath, baseInZip string) {
+	// Open the Directory
+	files, err := ioutil.ReadDir(basePath)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	for _, file := range files {
+		fmt.Println(basePath + file.Name())
+		if !file.IsDir() {
+			dat, err := ioutil.ReadFile(basePath + file.Name())
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			// Add some files to the archive.
+			f, err := w.Create(baseInZip + file.Name())
+			if err != nil {
+				fmt.Println(err)
+			}
+			_, err = f.Write(dat)
+			if err != nil {
+				fmt.Println(err)
+			}
+		} else if file.IsDir() {
+
+			// Recurse
+			newBase := basePath + file.Name() + "/"
+			fmt.Println("Recursing and Adding SubDir: " + file.Name())
+			fmt.Println("Recursing and Adding SubDir: " + newBase)
+
+			addFiles(w, newBase, baseInZip  + file.Name() + "/")
+		}
+	}
+}
+
+func (s *server) Configure() {
+	c := cron.New()
+	c.AddFunc("0 0 * * *", RunEveryDay)
+	c.Start()
+
+}
+
+func RemoveContents(dir string) error {
+	files, err := filepath.Glob(filepath.Join(dir, "*"))
+	if err != nil {
+		return err
+	}
+	for _, file := range files {
+		err = os.RemoveAll(file)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+func RunEveryDay() {
+
+
+	folders := [3]string{"gomel", "minsk", "vitebsk"}
+
+	for _, folder := range folders {
+		sourceFolder := "./files/" +  folder + "/"
+
+		var time = time.Now().Format(time.RFC822)
+		var url = "./arhives/" + folder + "_" + time + ".zip"
+		// Get a Buffer to Write To
+		outFile, err := os.Create(url)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer outFile.Close()
+
+		// Create a new zip archive.
+		w := zip.NewWriter(outFile)
+
+		// Add some files to the archive.
+		addFiles(w, sourceFolder, "")
+
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		// Make sure to check the error on Close.
+		err = w.Close()
+		if err != nil {
+			fmt.Println(err)
+		}
+
+
+		RemoveContents(sourceFolder)
+	}
+}
 
 func (s *server) handleAddUser() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
