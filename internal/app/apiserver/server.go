@@ -102,12 +102,13 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *server) configureRouter() {
-	s.router.PathPrefix("/").Handler(http.StripPrefix("/",
-		http.FileServer(http.Dir("/home/uroot/web/"))))
 	s.router.HandleFunc("/api/get_user", s.handleGetUser()).Methods("POST")
 	s.router.HandleFunc("/api/addUser", s.handleAddUser()).Methods("POST")
-	s.router.Handle("/files/photos/{rest}", http.StripPrefix("/files/photos/", http.FileServer(http.Dir("./files/photos/"))))
-	s.router.PathPrefix("/").Handler(http.StripPrefix("/abiturient_files/", http.FileServer(http.Dir("/home/uroot/abit_files/"))))
+	s.router.PathPrefix("/abiturient_files/").Handler(http.StripPrefix("/abiturient_files/",
+		http.FileServer(http.Dir(/*"./abiturient_files/" */"/home/uroot/abit_files/"))))
+	s.router.PathPrefix("/").Handler(http.StripPrefix("/",
+		http.FileServer(http.Dir(/*"./web/"*/ "/home/uroot/web/"))))
+
 }
 
 func (s *server) logRequest(w http.ResponseWriter, r *http.Request) {
