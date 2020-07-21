@@ -104,7 +104,7 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (s *server) configureRouter() {
 	s.router.PathPrefix("/").Handler(http.StripPrefix("/",
-	http.FileServer(http.Dir("/home/uroot/abit_files/web/"))))
+	http.FileServer(http.Dir("/home/uroot/web/"))))
 	s.router.HandleFunc("/api/get_user", s.handleGetUser()).Methods("POST")
 	s.router.HandleFunc("/api/addUser", s.handleAddUser()).Methods("POST")
 	s.router.Handle("/files/photos/{rest}", http.StripPrefix("/files/photos/", http.FileServer(http.Dir("./files/photos/"))))
