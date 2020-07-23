@@ -147,19 +147,18 @@ func (s *server) handleAddUser() http.HandlerFunc {
 
 		if uni.UniverLocation == "Минск" {
 			baseUrl = baseUrl + "minsk/"
-		} else if uni.UniverLocation == "Витебск"  {
+		} else if uni.UniverLocation == "Витебск" {
 			baseUrl = baseUrl + "vitebsk/"
 		} else if uni.UniverLocation == "Гомель" {
 			baseUrl = baseUrl + "gomel/"
 		}
 
-	baseUrl = baseUrl + uni.SerialAndPassportNumber + ".xml"
+		baseUrl = baseUrl + uni.SerialAndPassportNumber + ".xml"
 
-		if  Exists(baseUrl) {
-				s.error(w,r,http.StatusGone, store.FileExist)
-				return
+		if Exists(baseUrl) {
+			s.error(w, r, http.StatusGone, store.FileExist)
+			return
 		}
-
 
 		writer, er := os.Create(baseUrl)
 		if er != nil {
@@ -204,6 +203,8 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *server) configureRouter() {
+	s.router.PathPrefix("/").Handler(http.StripPrefix("/",
+		http.FileServer(http.Dir("/home/uroot/web/"))))
 	s.router.HandleFunc("/api/get_user", s.handleGetUser()).Methods("POST")
 	s.router.HandleFunc("/api/addUser", s.handleAddUser()).Methods("POST")
 	s.router.Handle("/files/photos/{rest}", http.StripPrefix("/files/photos/", http.FileServer(http.Dir("./files/photos/"))))

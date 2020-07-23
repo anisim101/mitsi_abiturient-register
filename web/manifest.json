@@ -1,0 +1,13 @@
+{
+    "name": "mitso_abiturient",
+    "short_name": "mitso_abiturient",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#0175C2",
+    "theme_color": "#0175C2",
+    "description": "МИТСО абитуриент",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+    ]
+}
