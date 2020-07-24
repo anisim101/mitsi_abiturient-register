@@ -3,15 +3,14 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "assets/AssetManifest.json": "2efbb41d7877d10aac9d091f58ccd7b9",
-"assets/FontManifest.json": "01700ba55b08a6141f33e168c4a6c22f",
+  "assets/AssetManifest.json": "99914b932bd37a50b983c5e7c90ae93b",
+"assets/FontManifest.json": "580ff1a5d08679ded8fcf5c6848cece7",
 "assets/fonts/MaterialIcons-Regular.ttf": "56d3ffdef7a25659eab6a68a3fbfaf16",
-"assets/NOTICES": "bb07740a685df37eb39d69fa306f1d14",
-"assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "115e937bb829a890521f72d2e664b632",
+"assets/NOTICES": "b58e9138178b9d28c3b72777ed9c692d",
 "favicon.png": "4c12892ea2ea4dc41fa3e2757c8ec923",
 "index.html": "26af59aeab6fd6468ad164d0ed323545",
 "/": "26af59aeab6fd6468ad164d0ed323545",
-"main.dart.js": "dbc5c19889c07ac4fc0fb79ae364665c",
+"main.dart.js": "4af1ea6661a0fa0a513b30ade24de947",
 "manifest.json": "d9fb77e12844646940168f90b97ea687"
 };
 
@@ -126,11 +125,11 @@ self.addEventListener("fetch", (event) => {
 self.addEventListener('message', (event) => {
   // SkipWaiting can be used to immediately activate a waiting service worker.
   // This will also require a page refresh triggered by the main worker.
-  if (event.data == 'skipWaiting') {
+  if (event.data === 'skipWaiting') {
     return self.skipWaiting();
   }
 
-  if (event.message = 'downloadOffline') {
+  if (event.message === 'downloadOffline') {
     downloadOffline();
   }
 });
