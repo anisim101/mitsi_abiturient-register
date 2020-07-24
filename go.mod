@@ -10,6 +10,7 @@ require (
 	github.com/google/uuid v1.1.1
 	github.com/googollee/go-socket.io v1.4.3
 	github.com/gorilla/mux v1.7.3
+	github.com/jasonlvhit/gocron v0.0.0-20200423141508-ab84337f7963
 	github.com/lib/pq v1.3.0
 	github.com/robfig/cron v1.2.0
 	github.com/sirupsen/logrus v1.4.2

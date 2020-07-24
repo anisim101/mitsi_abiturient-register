@@ -6,7 +6,7 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
-	"github.com/robfig/cron"
+	"github.com/jasonlvhit/gocron"
 	"io"
 	"io/ioutil"
 	"mitsoСhat/internal/app/model"
@@ -74,10 +74,8 @@ func addFiles(w *zip.Writer, basePath, baseInZip string) {
 }
 
 func (s *server) Configure() {
-	c := cron.New()
-	c.AddFunc("0 0 * * *", RunEveryDay)
-	c.Start()
-
+	gocron.Every(1).Day().At("00:00").Do(RunEveryDay)
+	<- gocron.Start()
 }
 
 func RemoveContents(dir string) error {
